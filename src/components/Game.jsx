@@ -13,11 +13,7 @@ export const GameEl = styled.div`
   flex-direction: column;
   padding: 0.5rem;
 `;
-const initialPlayerState = {
-  totalScore: 0,
-  currentScore: 0,
-  wins: 0,
-};
+
 const PlayersContainer = styled.div`
   display: flex;
   //justify-items: stretch;
@@ -42,19 +38,39 @@ dicesPlaying,
 export default function Game(props) {
   const [state, setState] = useState({
     ...props,
-    currentPlayer: 1,
+    currentPlayer: 0,
     round: 0,
     playersLeft: props.players,
     diceResults: Array.from({ length: props.dicesPlaying }, () => 6),
   });
-  //console.log(state);
+  const [players, setPlayers] = useState(
+    Array.from({ length: state.players }, (_, i) => ({
+      totalScore: 0,
+      currentScore: 0,
+      wins: 0,
+      isPlaying: true,
+      playerNum: i,
+    }))
+  );
   const handleRolling = () => {
-    const diceResults = dicesResults(props.dicesPlaying);
-
+    const diceResults = dicesResults(props.dicesPlaying, true);
     setState((p) => ({ ...p, diceResults }));
-
     if (diceResults.every((n) => n === 6)) {
+      console.log("6 everywhere");
+      //switch to next active player:
+      const nextPlayer = players
+        .concat(players)
+        .slice(state.currentPlayer + 1)
+        .find((el) => el.isPlaying === true);
+      setPlayers((players) => {
+        players[state.currentPlayer].currentScore += 10;
+
+        return players;
+      });
+      setState((p) => ({ ...p, currentPlayer: nextPlayer.playerNum }));
+      return;
     }
+    //check if current player has more than|equal to target
   };
   return (
     <GameEl>
@@ -63,13 +79,8 @@ export default function Game(props) {
         diceResults={state.diceResults}
       ></Dices>
       <PlayersContainer>
-        {Array.from({ length: state.players }, (_, i) => (
-          <Player
-            key={i}
-            active={i === state.currentPlayer - 1}
-            playerNum={i + 1}
-            {...initialPlayerState}
-          />
+        {players.map((_, i) => (
+          <Player key={i} active={i === state.currentPlayer} {...players[i]} />
         ))}
       </PlayersContainer>
       <Controls>

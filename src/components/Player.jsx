@@ -37,13 +37,14 @@ export default function Player(props) {
   return (
     <PlayerSec className={props.active && "active"}>
       <Header>
-        <PlayerTitle>Player {props.playerNum}</PlayerTitle>
+        <PlayerTitle>Player {props.playerNum + 1}</PlayerTitle>
         <PlayerScore>{props.totalScore}</PlayerScore>
       </Header>
       <Current>
         <p>Current</p>
         <p>{props.currentScore}</p>
       </Current>
+      <p>Wins:{props.wins} </p>
     </PlayerSec>
   );
 }
