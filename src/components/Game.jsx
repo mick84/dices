@@ -126,7 +126,7 @@ export default function Game(props) {
       } else {
         st.gameIsRunning = false;
         const winners = findWinners(st.players);
-        winners.forEach(treatWinner);
+        winners.length < st.players.length && winners.forEach(treatWinner);
       }
       return { ...st };
     });
