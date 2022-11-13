@@ -5,7 +5,12 @@ import Dices from "./Dices";
 import Player from "./Player";
 import Button from "./Button";
 import dicesResults from "../utils/dicesResults";
-import { treatWinner, treatLoser } from "../utils/treatPlayer";
+import {
+  treatWinner,
+  treatLoser,
+  resetPlayer,
+  findWinners,
+} from "../utils/treatPlayer";
 import circularShifted from "../utils/circularShifted";
 export const GameEl = styled.div`
   min-height: 100vh;
@@ -135,17 +140,28 @@ export default function Game(props) {
       player.currentScore = 0;
       player.locked = lock;
       const repeated = circularShifted(st.players, st.playerIndex);
-      const playersIn = repeated.filter((p) => !p.lost && !p.locked);
-      const nextPlayer = playersIn.length > 1 && playersIn[0];
+      const nextPlayer = repeated.find((p) => !p.lost && !p.locked);
       if (nextPlayer) {
         st.playerIndex = nextPlayer.playerNum;
       } else {
         st.gameIsRunning = false;
+        console.log("calculating scores...");
+        const winners = findWinners(st.players);
+        winners.forEach(treatWinner);
       }
       return { ...st };
     });
   };
-  const handleReset = () => {};
+  const handleReset = () => {
+    setState((st) => {
+      for (const player of st.players) {
+        resetPlayer(player, true);
+      }
+      st.playerIndex = 0;
+      st.gameIsRunning = true;
+      return { ...st };
+    });
+  };
   return (
     <GameEl>
       <FlexCont>
@@ -160,7 +176,7 @@ export default function Game(props) {
         {state.players.map((_, i) => (
           <Player
             key={i}
-            active={i === state.playerIndex}
+            active={state.gameIsRunning && i === state.playerIndex}
             {...state.players[i]}
           />
         ))}
@@ -182,9 +198,7 @@ export default function Game(props) {
         <Button
           onClick={handleHold.bind(null, true)}
           disabled={
-            !state.gameIsRunning ||
-            state.players[state.playerIndex].currentScore === 0 ||
-            state.players[state.playerIndex].locked
+            !state.gameIsRunning || state.players[state.playerIndex].locked
           }
         >
           🔒Lock

@@ -1,6 +1,6 @@
 export function treatWinner(player, state) {
   player.wins++;
-  player.locked = false;
+  //player.locked = false;
   player.winner = true;
   /*
   for (const p of state.players) {
@@ -35,13 +35,18 @@ export function treatLoser(player /*,state*/) {
   }
   */
 }
-export function findWinners(players) {}
+export function findWinners(players) {
+  const results = players.map((p) => (p.lost ? 0 : p.totalScore));
+  const maxResult = Math.max(...results);
+  const winners = players.filter((p) => p.totalScore === maxResult);
+  return winners;
+}
 export function resetPlayer(player, hard = false) {
   if (hard) {
     player.lost = false;
     player.winner = false;
     player.locked = false;
-    player.isPlaying = true;
+    //player.isPlaying = true;
     player.totalScore = 0;
   }
   player.currentScore = 0;
