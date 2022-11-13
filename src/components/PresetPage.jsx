@@ -1,16 +1,9 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import styled from "styled-components";
 
 import { GameEl } from "./Game";
 import Button from "./Button";
 
-/*props to gameEl: {
-  targetScore: 100,
-  gameIsRunning: false,
-  players: 2,
-  dicesPlaying: 2,
-  
-  changePresets} */
 const InputBlock = styled.div`
   background-color: #ca7b99;
   display: flex;
@@ -20,7 +13,6 @@ const InputBlock = styled.div`
   padding: 0.5rem;
   & > input,
   select {
-    height: 1.5rem;
     padding: 0.25rem 1rem;
   }
 `;
@@ -28,13 +20,30 @@ export default function PresetPage(props) {
   const targetScoreRef = useRef();
   const playersRef = useRef();
   const dicesRef = useRef();
+  const [seq, setSeq] = useState(props.forbiddenSeq);
   const handleSubmit = (e) => {
     e.preventDefault();
+    const players = Array.from(
+      { length: +playersRef.current.value },
+      (_, i) => ({
+        totalScore: 0,
+        currentScore: 0,
+        lost: false,
+        winner: false,
+        wins: 0,
+        // isPlaying: true,
+        playerNum: i,
+        locked: false,
+      })
+    );
     const updatedprops = {
+      settingsMode: false,
+      forbiddenSeq: seq,
       targetScore: +targetScoreRef.current.value,
       gameIsRunning: true,
-      players: +playersRef.current.value,
-      dicesPlaying: +dicesRef.current.value,
+      playerIndex: 0,
+      diceResults: Array.from({ length: +dicesRef.current.value }, () => seq),
+      players,
     };
     props.changePresets(updatedprops);
   };
@@ -54,8 +63,13 @@ export default function PresetPage(props) {
           and end the turn
         </li>
         <li>
-          Note if you get 6 on all the dices, you will lose all the poins from
-          "Current" and the turn will go to another player
+          Clicking on "Lock" you will participate without throwing dices. At the
+          end, your score will be compared to other's in order to find the
+          winner!
+        </li>
+        <li>
+          Note if you get {seq} on all the dices, you will lose all the poins
+          from "Current" and the turn will go to another player
         </li>
         <li>
           If you managed to reach exactly the target score, you win. If you
@@ -63,6 +77,22 @@ export default function PresetPage(props) {
         </li>
       </ul>
       <form onSubmit={handleSubmit}>
+        <InputBlock>
+          <label htmlFor="seq">Choose forbidden sequence:</label>
+          <select
+            name="seq"
+            id="seq"
+            defaultValue={props.forbiddenSeq}
+            onChange={(e) => setSeq(() => e.target.value)}
+          >
+            <option value={1}>1</option>
+            <option value={2}>2</option>
+            <option value={3}>3</option>
+            <option value={4}>4</option>
+            <option value={5}>5</option>
+            <option value={6}>6</option>
+          </select>
+        </InputBlock>
         <InputBlock>
           <label htmlFor="players">Choose number of players:</label>
           <select
@@ -99,6 +129,7 @@ export default function PresetPage(props) {
             defaultValue={props.targetScore}
             min={50}
             max={500}
+            step={50}
           />
         </InputBlock>
         <Button type="submit">🏁Start!</Button>
