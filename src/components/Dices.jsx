@@ -12,10 +12,6 @@ const Dice = styled.div`
   border-radius: 0.5rem;
   background-image: url(${(props) => props.imgSrc});
 `;
-/*
-props:{quantity:number,diceResults:array of nums 1->6 with length of dicesPlaying, initialized to [6,6,...6],show:boolean,}
-*/
-
 export default function Dices(props) {
   return (
     <DiceSection>

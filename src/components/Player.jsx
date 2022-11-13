@@ -53,10 +53,6 @@ const PlayerSec = styled.section`
   }
 `;
 export default function Player(props) {
-  //console.log(props);
-  //const [className,setClassName]=useState(props.active && "active");
-  ///const { winner, locked, lost } = props;
-  //const [state, setState] = useState({ winner, locked, lost });
   return (
     <PlayerSec className={(props.active && "active") || (props.lost && "lost")}>
       <Header>

@@ -40,8 +40,7 @@ const FlexCont = styled.div`
 /* props = {
       targetScore,
       gameIsRunning: true,
-      diceResults: Array<6>(playersQuantity),
-      playersRemained:number=players.length
+      diceResults: Array<forbiddenSeq>(playersQuantity),
       players: Array<{
         totalScore: 0,
         currentScore: 0,
@@ -53,9 +52,7 @@ const FlexCont = styled.div`
       currentPlayer : players[0]
     };
    
-    {
-      gameisrunning,diceresults,playersRemained,players,currentPlayer
-    }
+   
 */
 
 export default function Game(props) {
@@ -67,7 +64,6 @@ export default function Game(props) {
     playerIndex,
   });
   const handleRolling = () => {
-    //!-------------check if there are active unlocked players!
     const diceResults = dicesResults(props.dicesPlaying);
     setState((st) => ({ ...st, diceResults }));
     if (diceResults.every((n) => n === props.forbiddenSeq)) {
@@ -84,7 +80,6 @@ export default function Game(props) {
       (a, b) => a + b,
       state.players[state.playerIndex].currentScore
     );
-    console.log(newScore, props.targetScore);
     setState((st) => {
       const player = st.players[st.playerIndex];
       player.currentScore = newScore;

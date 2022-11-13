@@ -5,8 +5,3 @@ export default styled.button`
   border-radius: 2rem;
   font-size: 1.2rem;
 `;
-/*
-export default function Button(props) {
-  return <Btn {...props}>{props.children}</Btn>;
-}
-*/
