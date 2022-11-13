@@ -90,7 +90,6 @@ export default function Game(props) {
         case newScore === props.targetScore:
           for (const p of st.players) {
             p.lost = p !== player;
-            // p.isPlaying = p === player;
           }
           st.gameIsRunning = false;
           treatWinner(player, st);
