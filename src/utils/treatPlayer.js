@@ -1,14 +1,7 @@
 export function treatWinner(player, state) {
   player.wins++;
-  //player.locked = false;
+  player.locked = true;
   player.winner = true;
-  /*
-  for (const p of state.players) {
-    p.lost = p !== player;
-    p.isPlaying = p === player;
-  }
-  */
-  //state.playerIndex = player.playerNum;
 
   console.log(`Player ${state.playerIndex + 1} won!`);
 }
