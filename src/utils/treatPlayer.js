@@ -4,7 +4,7 @@ export function treatWinner(player) {
   player.winner = true;
 }
 export function findWinners(players) {
-  const results = players.map((p) => (p.lost ? 0 : p.totalScore));
+  const results = players.map((p) => (p.lost ? -1 : p.totalScore));
   const maxResult = Math.max(...results);
   return players.filter((p) => p.totalScore === maxResult);
 }
