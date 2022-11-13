@@ -37,24 +37,6 @@ const FlexCont = styled.div`
   justify-content: space-between;
   align-items: flex-end;
 `;
-/* props = {
-      targetScore,
-      gameIsRunning: true,
-      diceResults: Array<forbiddenSeq>(playersQuantity),
-      players: Array<{
-        totalScore: 0,
-        currentScore: 0,
-        wins: 0,
-        locked:false
-        isPlaying: true,
-        playerNum: i,         <= i from 0 to players.length, excluding!
-      }>(players.length),
-      currentPlayer : players[0]
-    };
-   
-   
-*/
-
 export default function Game(props) {
   const { gameIsRunning, diceResults, players, playerIndex } = props;
   const [state, setState] = useState({
