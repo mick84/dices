@@ -5,12 +5,7 @@ import Dices from "./Dices";
 import Player from "./Player";
 import Button from "./Button";
 import dicesResults from "../utils/dicesResults";
-import {
-  treatWinner,
-  treatLoser,
-  resetPlayer,
-  findWinners,
-} from "../utils/treatPlayer";
+import { treatWinner, resetPlayer, findWinners } from "../utils/treatPlayer";
 import circularShifted from "../utils/circularShifted";
 export const GameEl = styled.div`
   min-height: 100vh;
@@ -71,11 +66,6 @@ export default function Game(props) {
     players,
     playerIndex,
   });
-  /*
-  const playerEls = state.players.map((_, i) => (
-    <Player key={i} active={i === state.playerIndex} {...state.players[i]} />
-  ));
-  */
   const handleRolling = () => {
     //!-------------check if there are active unlocked players!
     const diceResults = dicesResults(props.dicesPlaying);
@@ -100,7 +90,7 @@ export default function Game(props) {
       player.currentScore = newScore;
       switch (true) {
         case newScore > props.targetScore:
-          treatLoser(player, st);
+          player.lost = true;
           break;
         case newScore === props.targetScore:
           for (const p of st.players) {
@@ -117,8 +107,6 @@ export default function Game(props) {
       if (otherPlaying.length > 1) {
         st.playerIndex = otherPlaying[0].playerNum;
       } else if (otherPlaying.length === 1) {
-        //otherPlaying[0].locked = true;
-        //calculate max score from all not losers:
         const scoresToCompare = st.players.map((p) =>
           p.lost ? 0 : p.totalScore
         );
@@ -127,13 +115,11 @@ export default function Game(props) {
         for (const winner of winners) {
           treatWinner(winner, st);
         }
-        //treatWinner(otherPlaying[0], state);
       }
       return { ...st };
     });
   };
   const handleHold = (lock) => {
-    //set player's current score to total score
     setState((st) => {
       const player = st.players[st.playerIndex];
       player.totalScore += player.currentScore;
@@ -145,7 +131,6 @@ export default function Game(props) {
         st.playerIndex = nextPlayer.playerNum;
       } else {
         st.gameIsRunning = false;
-        console.log("calculating scores...");
         const winners = findWinners(st.players);
         winners.forEach(treatWinner);
       }
